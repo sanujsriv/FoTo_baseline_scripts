@@ -62,7 +62,7 @@ parser.add_argument('-dt', '--dtype',        type=str,   default='short')
 parser.add_argument('-t', '--num_topic',        type=int,   default=10)
 parser.add_argument('-f', '--en1-units',        type=int,   default=100)
 parser.add_argument('-s', '--en2-units',        type=int,   default=100)
-parser.add_argument('-b', '--batch_size',       type=int,   default=10000)
+parser.add_argument('-bs', '--batch_size',       type=int,   default=10000)
 parser.add_argument('-o', '--optimizer',        type=str,   default='Adam')
 parser.add_argument('-r', '--learning-rate',    type=float, default=0.001) #0.002
 parser.add_argument('-m', '--momentum',         type=float, default=0.99)
@@ -71,6 +71,7 @@ parser.add_argument('-q', '--init-mult',        type=float, default=1.0)    # t 
 parser.add_argument('-v', '--variance',         type=float, default=0.995)  # defaul
 parser.add_argument('--start',                  action='store_true')        # start training at invocation
 parser.add_argument('--nogpu',                  action='store_true')        # do not use GPU acceleration
+parser.add_argument('-sg_emb','--skipgram_embeddings', type=int, default=1, help='whether use of skipgram embeddings or any other embeddings')
 
 args = parser.parse_args()
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -98,6 +99,8 @@ elif 'nfcorpus' in data_name:
   batch_size = 250
 elif 'opinions_twitter' in data_name: 
   batch_size = 250
+elif 'newscategory' in data_name:  
+  batch_size = 1000
 else: 
   batch_size = 250
 
@@ -106,18 +109,28 @@ queryset = args.queryset
 
 print('\nbatch_size: ',batch_size)
 d_dir = "/content/"+"data_"+data_name+"/"+dtype
+
+os.chdir(data_dir)
+embeddings=load_obj_pkl5("generated_embeddings_all_datasets")
+
 os.chdir(data_dir+d_dir)
 
 data_preprocessed=load_obj_pkl5("data_preprocessed_"+data_name+"_"+dtype)
 data_preprocessed_labels=load_obj_pkl5("data_preprocessed_labels_"+data_name+"_"+dtype)
-embeddings = load_obj("embeddings_"+data_name+"_"+dtype)
-queries_data_dict = decompress_pickle("queries_"+data_name)
+
+# embeddings = load_obj("embeddings_"+data_name+"_"+dtype)
+
+# queries_data_dict_g = decompress_pickle("queries_"+data_name)
+queries_data_dict = load_obj_pkl5("queries_data_dict_sg")
 qs = str(queryset)
 keywords = queries_data_dict[qs]['query']
-whole_query = queries_data_dict[qs]['whole_query']
-extended_keywords_list = queries_data_dict[qs]['extended_keywords_list']
-os.chdir(prod_lda_dir)
 
+# whole_query = queries_data_dict_g[qs]['whole_query']
+# whole_query = [' '.join(keywords)]
+# extended_keywords_list = queries_data_dict[qs]['extended_keywords_list']
+
+extended_keywords_list = queries_data_dict[qs]['extended_keywords_list_sg_cosine']
+os.chdir(prod_lda_dir)
 
 train_vec,train_label,_,preprossed_data_non_zeros,vocab = get_data_label_vocab(data_preprocessed,data_preprocessed_labels)
 train_label  =np.asanyarray(train_label)
@@ -144,12 +157,14 @@ print('Before adding pseudo : ',len(data),len(labels))
 keywords_as_labels = []
 
 
-for i in range(len(whole_query)):
+# for i in range(len(whole_query)):
+for i in range(len(keywords)):
   kws = extended_keywords_list[i]
   print(kws)
   kws = ' '.join(extended_keywords_list[i])
   data.append(kws)
-  pseudo_label = 'p{'+whole_query[i]+'}'
+  # pseudo_label = 'p{'+whole_query[i]+'}'
+  pseudo_label = 'p{'+keywords[i]+'}'
   keywords_as_labels.append(pseudo_label)
   labels = np.append(labels,pseudo_label)
 

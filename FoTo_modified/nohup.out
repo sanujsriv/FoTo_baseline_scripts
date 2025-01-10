@@ -1,0 +1,57 @@
+device:  cuda
+newscategory 164956 164956 3000 short  keyword(s) -  ['republican', 'election']
+3 4.98 21
+train_input_vec_shape : (164956, 3000)
+Traceback (most recent call last):
+  File "main.py", line 142, in <module>
+    desm_score = DESM_score_Corpus(all_aspects_all_keywords, train_vec, vocab, embeddings)
+  File "/home/grad16/sakumar/emnlp2022/FoTo/utils.py", line 38, in DESM_score_Corpus
+    q = get_embedding_tensor(query_list,embeddings)
+  File "/home/grad16/sakumar/emnlp2022/FoTo/utils.py", line 118, in get_embedding_tensor
+    def get_embedding_tensor(word_list,embeddings): return torch.tensor(np.asarray([embeddings[w] for w in word_list]))
+KeyboardInterrupt
+/home/grad16/sakumar/emnlp2022/FoTo/utils.py:81: UserWarning: The given NumPy array is not writable, and PyTorch does not support non-writable tensors. This means writing to this tensor will result in undefined behavior. You may want to copy the array to protect its data or make it writable before converting it to a tensor. This type of warning will be suppressed for the rest of this program. (Triggered internally at ../torch/csrc/utils/tensor_numpy.cpp:206.)
+  keyword_torch = torch.from_numpy(embeddings[k])
+device:  cuda
+newscategory 164956 164956 3000 short  keyword(s) -  ['republican', 'election']
+3 4.98 21
+train_input_vec_shape : (164956, 3000)
+args: Namespace(activation='relu', batch_size=256, data_path='./content', dataset='newscategory', dropout=0.2, dtype='short', emb_size=300, epochs=1000, hidden1=100, hidden2=100, learning_rate=0.001, max_features=4000, num_coordinate=2, num_topic=10, num_words=10, queryset=1, run=1, show_knn=False, skipgram_embeddings=0, threshold=0.5, variance_x=1.0, visualize=True)
+
+
+dropout: 0.2 
+
+
+keywords:  ['republican', 'election']
+[array(['republican', 'democrat', 'democratic', 'liberal', 'political'],
+      dtype='<U14'), array(['election', 'presidential', 'vote', 'elected', 'ballot'],
+      dtype='<U14')]
+['republican' 'democrat' 'democratic' 'liberal' 'political']
+['election' 'presidential' 'vote' 'elected' 'ballot']
+tensor([[0., 0.],
+        [0., 0.],
+        [0., 0.],
+        ...,
+        [0., 0.],
+        [0., 0.],
+        [0., 0.]])
+num_of_latent_keywords:  2
+en1,en2,drop,lr,var_x,bs,act -  100 100 0.2 0.001 1.0 256 relu 
+
+
+Epoch -> 0 , loss -> 25453.930335998535
+recon_loss==> 6461954.82421875 || NL1==> 6406013.8359375 || NL2==> 55940.99273300171 || NL3==> 0.0|| KLD==> 47839.9965583086
+Epoch -> 10 , loss -> 23999.136905670166
+recon_loss==> 6059593.174316406 || NL1==> 6056057.039550781 || NL2==> 3536.137750462911 || NL3==> 0.0|| KLD==> 77994.79202270508
+Epoch -> 20 , loss -> 23864.18989944458
+recon_loss==> 6010154.440673828 || NL1==> 6007466.445556641 || NL2==> 2687.990523009019 || NL3==> 0.0|| KLD==> 92924.35872650146
+Epoch -> 30 , loss -> 23812.59084701538
+recon_loss==> 5991585.292480469 || NL1==> 5989142.197753906 || NL2==> 2443.1060079009912 || NL3==> 0.0|| KLD==> 98318.35970687866
+Epoch -> 40 , loss -> 23793.767807006836
+recon_loss==> 5985882.759277344 || NL1==> 5981165.250488281 || NL2==> 4717.502522878756 || NL3==> 0.0|| KLD==> 99203.2774848938
+Traceback (most recent call last):
+  File "main.py", line 210, in <module>
+    trained_model = train(model,train_vec,train_label,args,all_indices,doc_contains_anykey_ext,keywords_as_docs,ranking_q_for_all_doc,device)
+  File "/home/grad16/sakumar/emnlp2022/FoTo/train_evaluation.py", line 33, in train
+    input_w = torch.tensor(tensor_train_w[batch_ndx]).float().to(device)
+KeyboardInterrupt

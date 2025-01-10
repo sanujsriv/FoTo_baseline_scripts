@@ -41,7 +41,7 @@ parser = argparse.ArgumentParser(description='FoTo')
 parser.add_argument('-d','--dataset', type=str, default='bbc', help='name of corpus')
 parser.add_argument('-dt','--dtype', type=str, default='short', help='for short text')
 parser.add_argument('-path','--data_path', type=str, default='./content', help='directory containing data')
-parser.add_argument('-bs','--batch_size', type=int, default=256, help='batch size for training')
+parser.add_argument('-bs','--batch_size', type=int, default=250, help='batch size for training')
 parser.add_argument('-r','--run', type=int, default=1, help='run')
 parser.add_argument('-maxFeat','--max_features', type=int, default=4000, help='max features in countvectorizer (how large should be the vocab)')
 parser.add_argument('-qs','--queryset', type=int, default=1, help='the queryset to pass')
@@ -51,6 +51,8 @@ parser.add_argument('-th','--threshold', type=float, default=0.5, help='to use e
 ## model arguments
 parser.add_argument('-k','--num_topic', type=int, default=10, help='number of topics')
 parser.add_argument('-sg_emb','--skipgram_embeddings', type=int, default=0, help='whether use of skipgram embeddings or any other embeddings')
+parser.add_argument('-sg_metric','--skipgram_metric', type=str, default='cosine', help='whether use of skipgram embeddings or any other embeddings')
+
 parser.add_argument('-emb_sz','--emb_size', type=int, default=300, help='dimension of embeddings')
 parser.add_argument('-act','--activation', type=str, default='relu', help='which activation function(relu,softplus,leaky_relu,sigmoid)')
 parser.add_argument('-h1','--hidden1', type=int, default=100, help='dim of hidden layer 1')
@@ -59,7 +61,7 @@ parser.add_argument('-varx', '--variance_x', type=float, default=1.0, help='vari
 
 ## optimization arguments
 parser.add_argument('-lr','--learning_rate', type=float, default=0.001, help='learning rate')
-parser.add_argument('-e','--epochs', type=int, default=1000, help='number of epochs')
+parser.add_argument('-e','--epochs', type=int, default=1, help='number of epochs')
 parser.add_argument('-ncoord','--num_coordinate', type=int, default=2, help='num of coordinates')
 parser.add_argument('-drop','--dropout', type=float, default=0.2, help='dropout rate on the encoder')
 
@@ -70,7 +72,9 @@ parser.add_argument('--show_knn', type=bool, default=False, help='Show KNN score
 
 args = parser.parse_args()
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+# device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+device = "cuda" #"cuda"
+print('device: ',device)
 
 if __name__ == '__main__':
 
@@ -78,6 +82,7 @@ if __name__ == '__main__':
 
   bs = args.batch_size
   epochs = args.epochs
+  print('args.epochs',args.epochs)
   activation = args.activation
   # activation = 'softplus'
 
@@ -89,14 +94,16 @@ if __name__ == '__main__':
   num_topic = args.num_topic
 
   skipgram_embeddings = args.skipgram_embeddings
+  sg_metric = args.skipgram_metric
+  # skipgram_embeddings = 1
   data_name= args.dataset # wos,bbc,searchsnippet,stackoverflow,agnews120k
   
-  if data_name == 'bbc': bs = 250
-  elif data_name == 'searchsnippet': bs = 250
-  elif data_name == 'yahooanswers': bs = 1000
-  elif data_name == 'nfcorpus': bs = 250
-  elif data_name == 'opinions_twitter': bs = 250
-  else: bs = args.batch_size
+  # if data_name == 'bbc': bs = 250
+  # elif data_name == 'searchsnippet': bs = 250
+  # elif data_name == 'yahooanswers': bs = 1000
+  # elif data_name == 'nfcorpus': bs = 250
+  # elif data_name == 'opinions_twitter': bs = 250
+  # else: bs = args.batch_size
 
   # eps_samples = args.eps_samples
 
@@ -119,14 +126,14 @@ if __name__ == '__main__':
   save_dir_no_bkp = '/home/student_no_backup/sakumar/'+paper+'/'+model_name
   # save_dir_no_bkp = home_dir
   #### Data Downloading ####
-  device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+  # device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-  print('device: ',device)
+  print('bs: ',bs)
   dtype=args.dtype 
 
   # ##### Data loading #####
   # perc_vocab = 0.7
-  loaded_data = load_data(data_name,dtype,data_dir,queryset,ext,th,skipgram_embeddings)
+  loaded_data = load_data(data_name,dtype,data_dir,queryset,ext,th,skipgram_embeddings,sg_metric)
   data_preprocessed,data_preprocessed_labels,embeddings,name,keywords,extend_each_by,extended_keywords_list,queries_data_dict = loaded_data
   print(name,len(data_preprocessed_labels),len(data_preprocessed),len(embeddings),dtype,' keyword(s) - ',keywords)
 
@@ -182,6 +189,9 @@ if __name__ == '__main__':
     
   emb_size,cos_sim,embedding_tensor_words,embedding_tensor_keywords_d = get_parameters(embedding_tensor_sorted_alp,embedding_tensor_keywords,device)
   all_indices = torch.randperm(train_vec.shape[0]).split(bs)
+  
+  # os.chdir('/home/student_no_backup/sakumar/emnlp2022/FoTo/SavedOutput/searchsnippet/short/topics_50/ext1/sg_eucl/1/qs_1/run_6/')
+  # all_indices = decompress_pickle('searchsnippet_short_topics_50_qs_1_run_6_ext_1_all_results')['all_indices']
   num_input = train_vec.shape[1]
 
   keywords_as_docs,doc_contains_anykey_ext,ranking_q_for_all_doc = get_ranking_parameters(train_vec,preprossed_data_non_zeros,keywords,embeddings,extended_keywords_list,all_keywords_score,word_list,vocab)
@@ -215,7 +225,7 @@ if __name__ == '__main__':
 
   bigram_coocurring_word_list = get_bigram_coocurring_word_list(preprossed_data_non_zeros,keywords)
   os.chdir(home_dir)
-  save_dir = save_dir_no_bkp+"/SavedOutput/"+data_name+"/"+dtype+"/topics_"+str(args.num_topic)+"/ext"+str(ext)+"/qs_"+str(queryset)+"/run_"+str(args.run) # +'/th_'+str(th)+
+  save_dir = save_dir_no_bkp+"/SavedOutput/"+data_name+"/"+dtype+"/topics_"+str(args.num_topic)+"/ext1/"+"/qs_"+str(queryset)+"/run_"+str(args.run) # +'/th_'+str(th)+
   os.makedirs(save_dir,exist_ok=True)
   os.chdir(save_dir)
 
@@ -233,7 +243,9 @@ if __name__ == '__main__':
     
   figname = data_name+"_"+dtype+"_topics_"+str(args.num_topic)+"_run_"+str(args.run)+"_qs_"+str(queryset)+"_ext_"+str(ext)
   # plot_fig(x_list, labels_list,zphi,lim =10,contour='no')
-  lim=20
+  # lim=20
+  number = np.max(x_list)
+  lim = round(number/10)*10
   plot_fig(model_name,x_list, labels_list, zphi,lim,sorted_unique_labels,query_center,keywords_as_labels,hv_qwords=True,showtopic=True,
   bold_topics=True,remove_legend=False,show_axis=True,save=True,figname=figname)
  

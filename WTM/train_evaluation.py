@@ -10,6 +10,9 @@ def train(model,tensor_train_w,train_label,args,all_indices,device):
   beta1=0.99
   beta2 = 0.999
   kld_arr,recon_arr = [],[]
+  
+  #print('@@@@@@',device)
+  #device='0'
   model.to(device)
 
   optimizer = optim.Adam(model.parameters(), learning_rate, betas=(beta1, beta2))

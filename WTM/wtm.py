@@ -166,6 +166,5 @@ class Model(nn.Module):
         NL= NL.mean(0)
      
         KLD = self.KLD(posterior_mean,posterior_logvar,posterior_var).mean(0)
-
         loss = NL + KLD
         return loss,NL,KLD

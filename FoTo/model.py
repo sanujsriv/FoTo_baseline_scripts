@@ -31,7 +31,6 @@ class FoTo(nn.Module):
         self.embeddings_keys = embedding_keywords
         self.activation = activation
         
- 
         # encoder
         self.en1_fc     = nn.Linear(num_input, en1_units_x)             # V -> 100 #nxV->(vxh1)->nxh1; 
         self.en2_fc     = nn.Linear(en1_units_x, en2_units_x)             # 100  -> 100
@@ -77,6 +76,7 @@ class FoTo(nn.Module):
         
     def init_parameters(self):
         nn.init.normal_(self.mu_z, 0, 0.01)
+        nn.init.normal_(self.beta_bias, 0, 0.01)
 
     def get_beta(self):
         return self.beta
@@ -124,7 +124,8 @@ class FoTo(nn.Module):
         return z
 
     def get_theta(self,first_batch,input_keywords_as_docs): 
-      # topic mapping 
+      # topic mapping
+      
       c1_nn = self.get_activation(self.activation,self.c1_fc(self.mu_z))                         
       c2_nn = self.get_activation(self.activation,self.c2_fc(c1_nn)) 
       # c1_nn = F.relu((self.c1_fc(self.mu_z)))                           
@@ -157,9 +158,9 @@ class FoTo(nn.Module):
     
     
     def decode(self,first_batch,input_keywords_as_docs):
-      theta, zx, zc,N = self.get_theta(first_batch,input_keywords_as_docs)
+      theta, zx, zc, N = self.get_theta(first_batch,input_keywords_as_docs)
 
-      self.beta = F.softmax(torch.mm(self.mu_z, self.embedding_words.T) + self.beta_bias,dim=-1)
+      self.beta = F.softmax(torch.mm(self.mu_z, self.embedding_words.T) + self.beta_bias,dim=-1) #
       # self.beta = F.softmax(self.decoder_bn(torch.mm(self.mu_z,self.embedding_words.T).T).T ,dim=-1)
 
       recon_v_relv = torch.mm(theta,self.beta)
@@ -203,7 +204,7 @@ class FoTo(nn.Module):
         smoothen = 1e-12 # 'error/term-smoothening constant'
         NL1 = - (input_w_keys * (recon_v+1e-20).log()).sum(-1)
         NL1 = NL1.sum()
-
+        
         KLD = self.KLD(posterior_mean,posterior_logvar,posterior_var).sum()
 
         doc_query_size = (N, self.num_keyword, self.num_coordinate) # NxKx2  
@@ -211,7 +212,7 @@ class FoTo(nn.Module):
         q_x = self.q.view(1, self.num_keyword, self.num_coordinate).expand(doc_query_size)
 
         eucl_sq_dist = (x_q - q_x).pow(2).sum(-1)
-        dist_doc_query_k = torch.exp(-0.5 * eucl_sq_dist)
+        # dist_doc_query_k = torch.exp(-0.5 * eucl_sq_dist)
         dist_doc_query = (torch.exp(-0.5 * eucl_sq_dist))
 
 
@@ -236,17 +237,18 @@ class FoTo(nn.Module):
         ###
         
         ### for ranking aspects
-        dist_A_q_k = dist_doc_query_k.unsqueeze(-1).expand(N,self.num_keyword,self.num_keyword) 
-        dist_B_q_k  =  dist_A_q_k.transpose(-2,-1) + smoothen
-        relv_A_k = relv_scores_k.unsqueeze(-1).expand(N,self.num_keyword,self.num_keyword) 
-        relv_B_k = relv_A_k.transpose(-2,-1)
+        # dist_A_q_k = dist_doc_query_k.unsqueeze(-1).expand(N,self.num_keyword,self.num_keyword) 
+        # dist_B_q_k  =  dist_A_q_k.transpose(-2,-1) + smoothen
+        # relv_A_k = relv_scores_k.unsqueeze(-1).expand(N,self.num_keyword,self.num_keyword) 
+        # relv_B_k = relv_A_k.transpose(-2,-1)
         ###
         
         B_minus_A= (dist_A_q/dist_B_q)#(dist_A_q-dist_B_q)
-        B_minus_A_k = (dist_A_q_k/dist_B_q_k)#(dist_A_q_k-dist_B_q_k)
-
+        # B_minus_A_k = (dist_A_q_k/dist_B_q_k)#(dist_A_q_k-dist_B_q_k)
+        # print('relvA-B',torch.isnan(relv_A - relv_B).any())
         ranking = ranking_0_or_1(relv_A - relv_B)
-        ranking_k = ranking_0_or_1(relv_A_k - relv_B_k)
+        
+        # ranking_k = ranking_0_or_1(relv_A_k - relv_B_k)
 
         NL2 =  - (ranking * (B_minus_A.sigmoid() + smoothen).log()).sum() 
         # NL3 =  - (ranking_k * (B_minus_A_k.sigmoid() + smoothen).log()).sum()

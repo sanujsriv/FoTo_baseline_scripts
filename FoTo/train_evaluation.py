@@ -2,13 +2,20 @@ import torch.optim as optim
 import torch
 import numpy as np 
 
+def check_nan_parameters(model):
+    nan_parameters = []
+    for name, param in model.named_parameters():
+        if torch.isnan(param).any():
+            nan_parameters.append(name)
+    return nan_parameters
+
 def train(model,tensor_train_w,train_label,args,all_indices,doc_contains_anykey_ext,keywords_as_docs,ranking_q_for_all_doc,device):
   
   learning_rate = args.learning_rate
   beta1 = 0.99
   beta2 = 0.999
   epochs = args.epochs
-
+  
   kld_arr,recon_arr,neg_log_rscore_arr = [],[],[]
   model.to(device)
 
@@ -45,6 +52,16 @@ def train(model,tensor_train_w,train_label,args,all_indices,doc_contains_anykey_
         loss.backward()
         optimizer.step() 
 
+        nan_params = check_nan_parameters(model)
+
+        # Print the NaN parameters
+        # if nan_params:
+        #     print("NaN parameters found:")
+        #     for name in nan_params:
+        #         print(name)
+        # else:
+        #     print("No NaN parameters found.")
+
         loss_epoch += loss.item()
         loss_u_epoch += loss_u.item()
         loss_KLD += xkl_loss.item()
@@ -57,8 +74,16 @@ def train(model,tensor_train_w,train_label,args,all_indices,doc_contains_anykey_
       kld_arr.append(loss_KLD)
       recon_arr.append(loss_u_epoch)
       if epoch % 10 == 0:
+          # model_params_stack_TF = torch.stack([torch.isnan(p).any() for p in model.parameters()])
+          # is_nan = model_params_stack_TF#.any()
+          # print('model params', is_nan)
+          # all_model_params = [param for param in model.parameters()]
+          # print(all_model_params[0])
+
           print('Epoch -> {} , loss -> {}'.format(epoch,loss_epoch))
           print('recon_loss==> {} || NL1==> {} || NL2==> {} || NL3==> {}|| KLD==> {}'.format(loss_u_epoch,loss_NL1_epoch,loss_NL2_epoch,loss_NL3_epoch, loss_KLD))
+          # if is_nan == True:
+          #   exit(0)
           # plot_fig(np.array(zx_l),label_l,model.decoder_phi_bn(model.centres).data.cpu().numpy(),10.0,'No')
   return current_model
 

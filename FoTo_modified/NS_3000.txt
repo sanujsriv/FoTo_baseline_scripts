@@ -1,0 +1,271 @@
+device:  cuda
+bs:  3000
+newscategory 145304 145304 5000 short  keyword(s) -  ['republican', 'election']
+3 11.89 90
+train_input_vec_shape : (145304, 5000)
+args: Namespace(activation='relu', batch_size=3000, data_path='./content', dataset='newscategory', dropout=0.2, dtype='short', emb_size=300, epochs=1000, hidden1=100, hidden2=100, learning_rate=0.001, max_features=4000, num_coordinate=2, num_topic=10, num_words=10, queryset=1, run=12, show_knn=False, skipgram_embeddings=0, threshold=0.5, variance_x=1.0, visualize=True)
+
+
+dropout: 0.2 
+
+
+keywords:  ['republican', 'election']
+[array(['republican', 'democrat', 'democratic', 'nationalist', 'liberal',
+       'political', 'republic', 'gop', 'dems', 'reagan', 'catholic',
+       'hillary'], dtype='<U16'), array(['election', 'electoral', 'presidential', 'vote', 'candidacy',
+       'recount', 'elected', 'polling', 'ballot', 'elect', 'presidency',
+       'caucus'], dtype='<U16')]
+['republican' 'democrat' 'democratic' 'nationalist' 'liberal' 'political'
+ 'republic' 'gop' 'dems' 'reagan' 'catholic' 'hillary']
+['election' 'electoral' 'presidential' 'vote' 'candidacy' 'recount'
+ 'elected' 'polling' 'ballot' 'elect' 'presidency' 'caucus']
+tensor([[0., 0.],
+        [0., 0.],
+        [0., 0.],
+        ...,
+        [0., 0.],
+        [0., 0.],
+        [0., 0.]])
+num_of_latent_keywords:  2
+en1,en2,drop,lr,var_x,bs,act -  100 100 0.2 0.001 1.0 3000 relu 
+
+
+Epoch -> 0 , loss -> 5846.053123474121
+recon_loss==> 17129750.890625 || NL1==> 14634225.125 || NL2==> 2495525.8212890625 || NL3==> 0.0|| KLD==> 220175.37744140625
+Epoch -> 10 , loss -> 5860.836784362793
+recon_loss==> 17244872.6875 || NL1==> 13980407.8046875 || NL2==> 3264464.89453125 || NL3==> 0.0|| KLD==> 152455.8397216797
+Epoch -> 20 , loss -> 5720.465545654297
+recon_loss==> 16772113.359375 || NL1==> 13789477.625 || NL2==> 2982635.65625 || NL3==> 0.0|| KLD==> 203648.02197265625
+Epoch -> 30 , loss -> 4913.964447021484
+recon_loss==> 14375827.171875 || NL1==> 13625338.4375 || NL2==> 750488.6303710938 || NL3==> 0.0|| KLD==> 192615.84790039062
+Epoch -> 40 , loss -> 4712.167724609375
+recon_loss==> 13759832.6875 || NL1==> 13608542.796875 || NL2==> 151289.96948242188 || NL3==> 0.0|| KLD==> 211200.79809570312
+Epoch -> 50 , loss -> 4647.309761047363
+recon_loss==> 13575992.7421875 || NL1==> 13516781.1484375 || NL2==> 59211.66989135742 || NL3==> 0.0|| KLD==> 201818.85668945312
+Epoch -> 60 , loss -> 4600.6116943359375
+recon_loss==> 13471347.640625 || NL1==> 13456909.5625 || NL2==> 14438.075256347656 || NL3==> 0.0|| KLD==> 167617.54040527344
+Epoch -> 70 , loss -> 4587.0693435668945
+recon_loss==> 13454495.6328125 || NL1==> 13444987.125 || NL2==> 9508.41128540039 || NL3==> 0.0|| KLD==> 144342.18701171875
+Epoch -> 80 , loss -> 4575.920097351074
+recon_loss==> 13430489.8984375 || NL1==> 13420239.40625 || NL2==> 10250.484592437744 || NL3==> 0.0|| KLD==> 135393.9599609375
+Epoch -> 90 , loss -> 4561.741737365723
+recon_loss==> 13376729.3203125 || NL1==> 13366951.78125 || NL2==> 9777.559265136719 || NL3==> 0.0|| KLD==> 147093.87145996094
+Epoch -> 100 , loss -> 5898.719787597656
+recon_loss==> 17294757.078125 || NL1==> 13582231.3359375 || NL2==> 3712525.701171875 || NL3==> 0.0|| KLD==> 213742.64672851562
+Epoch -> 110 , loss -> 4850.128349304199
+recon_loss==> 14156601.921875 || NL1==> 13454333.5 || NL2==> 702268.5009765625 || NL3==> 0.0|| KLD==> 225223.86755371094
+Epoch -> 120 , loss -> 4588.7912673950195
+recon_loss==> 13418835.15625 || NL1==> 13388731.703125 || NL2==> 30103.565155029297 || NL3==> 0.0|| KLD==> 185240.05139160156
+Epoch -> 130 , loss -> 4569.051429748535
+recon_loss==> 13379874.3203125 || NL1==> 13366054.59375 || NL2==> 13819.749824523926 || NL3==> 0.0|| KLD==> 165635.41015625
+Epoch -> 140 , loss -> 4972.037216186523
+recon_loss==> 14540020.421875 || NL1==> 13489391.0390625 || NL2==> 1050629.2797851562 || NL3==> 0.0|| KLD==> 203073.74584960938
+Epoch -> 150 , loss -> 5465.886497497559
+recon_loss==> 15905870.484375 || NL1==> 13553967.34375 || NL2==> 2351903.21875 || NL3==> 0.0|| KLD==> 312318.43994140625
+Epoch -> 160 , loss -> 5435.191055297852
+recon_loss==> 15808158.015625 || NL1==> 13529826.390625 || NL2==> 2278331.708984375 || NL3==> 0.0|| KLD==> 314923.4543457031
+Epoch -> 170 , loss -> 5106.415550231934
+recon_loss==> 14863531.6328125 || NL1==> 13475882.828125 || NL2==> 1387648.7919921875 || NL3==> 0.0|| KLD==> 282240.80517578125
+Epoch -> 180 , loss -> 4872.440505981445
+recon_loss==> 14200429.53125 || NL1==> 13410448.5859375 || NL2==> 789980.6938476562 || NL3==> 0.0|| KLD==> 246828.79809570312
+Epoch -> 190 , loss -> 4640.893821716309
+recon_loss==> 13531818.6015625 || NL1==> 13414314.953125 || NL2==> 117503.71704101562 || NL3==> 0.0|| KLD==> 226323.61840820312
+Epoch -> 200 , loss -> 5603.614013671875
+recon_loss==> 16324248.515625 || NL1==> 13542608.65625 || NL2==> 2781639.876953125 || NL3==> 0.0|| KLD==> 301391.78466796875
+Epoch -> 210 , loss -> 5296.92106628418
+recon_loss==> 15442018.078125 || NL1==> 13453891.875 || NL2==> 1988126.1572265625 || NL3==> 0.0|| KLD==> 272528.966796875
+Epoch -> 220 , loss -> 5108.833427429199
+recon_loss==> 14897842.03125 || NL1==> 13449710.953125 || NL2==> 1448131.134765625 || NL3==> 0.0|| KLD==> 257794.17041015625
+Epoch -> 230 , loss -> 5201.175857543945
+recon_loss==> 15180418.890625 || NL1==> 13489793.1640625 || NL2==> 1690625.7705078125 || NL3==> 0.0|| KLD==> 249292.17651367188
+Epoch -> 240 , loss -> 4921.894241333008
+recon_loss==> 14351486.3125 || NL1==> 13421581.0 || NL2==> 929905.328125 || NL3==> 0.0|| KLD==> 243216.00903320312
+Epoch -> 250 , loss -> 5115.690956115723
+recon_loss==> 14964753.2265625 || NL1==> 13384443.3671875 || NL2==> 1580309.7822265625 || NL3==> 0.0|| KLD==> 210615.74267578125
+Epoch -> 260 , loss -> 5269.817771911621
+recon_loss==> 15374953.734375 || NL1==> 13538893.3125 || NL2==> 1836060.474609375 || NL3==> 0.0|| KLD==> 257696.6962890625
+Epoch -> 270 , loss -> 5306.107810974121
+recon_loss==> 15451709.09375 || NL1==> 13531969.3671875 || NL2==> 1919739.65625 || NL3==> 0.0|| KLD==> 288748.0368652344
+Epoch -> 280 , loss -> 4930.7515869140625
+recon_loss==> 14402581.984375 || NL1==> 13448238.578125 || NL2==> 954343.3833007812 || NL3==> 0.0|| KLD==> 219929.7822265625
+Epoch -> 290 , loss -> 4714.462043762207
+recon_loss==> 13803428.625 || NL1==> 13430373.234375 || NL2==> 373055.3249511719 || NL3==> 0.0|| KLD==> 175002.57580566406
+Epoch -> 300 , loss -> 5417.226760864258
+recon_loss==> 15860038.875 || NL1==> 13536828.5625 || NL2==> 2323210.369140625 || NL3==> 0.0|| KLD==> 206241.40673828125
+Epoch -> 310 , loss -> 5281.704635620117
+recon_loss==> 15422452.453125 || NL1==> 13544545.2421875 || NL2==> 1877907.2880859375 || NL3==> 0.0|| KLD==> 244783.595703125
+Epoch -> 320 , loss -> 4846.024963378906
+recon_loss==> 14165453.03125 || NL1==> 13469572.3125 || NL2==> 695880.7951660156 || NL3==> 0.0|| KLD==> 204178.3135986328
+Epoch -> 330 , loss -> 4795.707252502441
+recon_loss==> 14035708.046875 || NL1==> 13466516.7578125 || NL2==> 569191.3356933594 || NL3==> 0.0|| KLD==> 183335.34448242188
+Epoch -> 340 , loss -> 4680.518051147461
+recon_loss==> 13690886.2265625 || NL1==> 13481696.1015625 || NL2==> 209190.11529541016 || NL3==> 0.0|| KLD==> 186049.3974609375
+Epoch -> 350 , loss -> 4761.222885131836
+recon_loss==> 13913872.984375 || NL1==> 13506792.421875 || NL2==> 407080.4522705078 || NL3==> 0.0|| KLD==> 202475.88928222656
+Epoch -> 360 , loss -> 5012.8751220703125
+recon_loss==> 14616145.5625 || NL1==> 13518786.546875 || NL2==> 1097359.0639648438 || NL3==> 0.0|| KLD==> 252082.61279296875
+Epoch -> 370 , loss -> 5031.551498413086
+recon_loss==> 14712422.171875 || NL1==> 13472389.453125 || NL2==> 1240032.6625976562 || NL3==> 0.0|| KLD==> 209910.2060546875
+Epoch -> 380 , loss -> 4662.800506591797
+recon_loss==> 13646593.9453125 || NL1==> 13445909.40625 || NL2==> 200684.5263671875 || NL3==> 0.0|| KLD==> 177412.306640625
+Epoch -> 390 , loss -> 4611.714401245117
+recon_loss==> 13516812.5078125 || NL1==> 13430779.03125 || NL2==> 86033.5110168457 || NL3==> 0.0|| KLD==> 155693.3751220703
+Epoch -> 400 , loss -> 4671.388092041016
+recon_loss==> 13683097.65625 || NL1==> 13446343.734375 || NL2==> 236753.95294189453 || NL3==> 0.0|| KLD==> 167488.86694335938
+Epoch -> 410 , loss -> 4603.037712097168
+recon_loss==> 13490315.046875 || NL1==> 13426981.90625 || NL2==> 63333.14111328125 || NL3==> 0.0|| KLD==> 156107.72595214844
+Epoch -> 420 , loss -> 4600.604026794434
+recon_loss==> 13507091.421875 || NL1==> 13419942.515625 || NL2==> 87148.97540283203 || NL3==> 0.0|| KLD==> 132027.8631591797
+Epoch -> 430 , loss -> 4591.975120544434
+recon_loss==> 13482171.59375 || NL1==> 13411045.6328125 || NL2==> 71125.91482543945 || NL3==> 0.0|| KLD==> 131477.3104248047
+Epoch -> 440 , loss -> 4582.4027099609375
+recon_loss==> 13449742.953125 || NL1==> 13399376.4765625 || NL2==> 50366.55554199219 || NL3==> 0.0|| KLD==> 135498.98266601562
+Epoch -> 450 , loss -> 4569.041259765625
+recon_loss==> 13410582.8359375 || NL1==> 13386594.9375 || NL2==> 23987.871551513672 || NL3==> 0.0|| KLD==> 134908.4031982422
+Epoch -> 460 , loss -> 4585.535980224609
+recon_loss==> 13450533.890625 || NL1==> 13387633.3359375 || NL2==> 62900.51578140259 || NL3==> 0.0|| KLD==> 144415.86303710938
+Epoch -> 470 , loss -> 4563.885200500488
+recon_loss==> 13388454.5234375 || NL1==> 13369143.625 || NL2==> 19310.968032836914 || NL3==> 0.0|| KLD==> 141760.00048828125
+Epoch -> 480 , loss -> 4561.120071411133
+recon_loss==> 13393578.0859375 || NL1==> 13360659.3125 || NL2==> 32918.71057128906 || NL3==> 0.0|| KLD==> 128420.41772460938
+Epoch -> 490 , loss -> 4560.10701751709
+recon_loss==> 13384279.2265625 || NL1==> 13351764.1875 || NL2==> 32515.008087158203 || NL3==> 0.0|| KLD==> 134776.95458984375
+Epoch -> 500 , loss -> 4634.575119018555
+recon_loss==> 13571975.484375 || NL1==> 13391591.4921875 || NL2==> 180383.9422607422 || NL3==> 0.0|| KLD==> 169504.25366210938
+Epoch -> 510 , loss -> 4626.052642822266
+recon_loss==> 13515838.2578125 || NL1==> 13420975.3671875 || NL2==> 94862.9469909668 || NL3==> 0.0|| KLD==> 198422.24877929688
+Epoch -> 520 , loss -> 4603.094177246094
+recon_loss==> 13468215.0234375 || NL1==> 13377118.578125 || NL2==> 91096.3424987793 || NL3==> 0.0|| KLD==> 176830.14587402344
+Epoch -> 530 , loss -> 4607.178253173828
+recon_loss==> 13482342.9921875 || NL1==> 13378596.21875 || NL2==> 103746.80528259277 || NL3==> 0.0|| KLD==> 177093.00341796875
+Epoch -> 540 , loss -> 4571.624244689941
+recon_loss==> 13395383.65625 || NL1==> 13358803.0703125 || NL2==> 36580.62708282471 || NL3==> 0.0|| KLD==> 157944.64916992188
+Epoch -> 550 , loss -> 4561.557220458984
+recon_loss==> 13368390.1328125 || NL1==> 13351724.671875 || NL2==> 16665.290908813477 || NL3==> 0.0|| KLD==> 154844.35546875
+Epoch -> 560 , loss -> 4565.79337310791
+recon_loss==> 13383595.59375 || NL1==> 13341341.5390625 || NL2==> 42253.99377441406 || NL3==> 0.0|| KLD==> 152408.162109375
+Epoch -> 570 , loss -> 4556.254280090332
+recon_loss==> 13357478.96875 || NL1==> 13334456.65625 || NL2==> 23022.337799072266 || NL3==> 0.0|| KLD==> 150116.42065429688
+Epoch -> 580 , loss -> 4551.757141113281
+recon_loss==> 13342782.2578125 || NL1==> 13325468.1953125 || NL2==> 17314.076446533203 || NL3==> 0.0|| KLD==> 151376.0703125
+Epoch -> 590 , loss -> 4546.744277954102
+recon_loss==> 13333222.671875 || NL1==> 13319743.765625 || NL2==> 13478.938549041748 || NL3==> 0.0|| KLD==> 146100.92553710938
+Epoch -> 600 , loss -> 4544.514915466309
+recon_loss==> 13321978.109375 || NL1==> 13311696.4375 || NL2==> 10281.667827606201 || NL3==> 0.0|| KLD==> 150603.01635742188
+Epoch -> 610 , loss -> 4542.637069702148
+recon_loss==> 13313486.25 || NL1==> 13302783.2734375 || NL2==> 10703.052921295166 || NL3==> 0.0|| KLD==> 153721.23291015625
+Epoch -> 620 , loss -> 4877.224502563477
+recon_loss==> 14247420.9453125 || NL1==> 13501922.234375 || NL2==> 745498.6547851562 || NL3==> 0.0|| KLD==> 213550.4549560547
+Epoch -> 630 , loss -> 4600.523086547852
+recon_loss==> 13443094.125 || NL1==> 13371158.4609375 || NL2==> 71935.52621459961 || NL3==> 0.0|| KLD==> 195422.01171875
+Epoch -> 640 , loss -> 4644.310821533203
+recon_loss==> 13591289.6875 || NL1==> 13345802.21875 || NL2==> 245487.44175720215 || NL3==> 0.0|| KLD==> 178843.2431640625
+Epoch -> 650 , loss -> 4629.4777908325195
+recon_loss==> 13518562.6171875 || NL1==> 13374670.0390625 || NL2==> 143892.60851287842 || NL3==> 0.0|| KLD==> 207555.04052734375
+Epoch -> 660 , loss -> 4569.7084884643555
+recon_loss==> 13374863.8671875 || NL1==> 13338101.890625 || NL2==> 36762.02783203125 || NL3==> 0.0|| KLD==> 172722.46606445312
+Epoch -> 670 , loss -> 4559.264335632324
+recon_loss==> 13351638.3671875 || NL1==> 13324974.96875 || NL2==> 26663.390991210938 || NL3==> 0.0|| KLD==> 164987.97607421875
+Epoch -> 680 , loss -> 4551.873565673828
+recon_loss==> 13333551.75 || NL1==> 13313629.8203125 || NL2==> 19921.9737701416 || NL3==> 0.0|| KLD==> 161024.73608398438
+Epoch -> 690 , loss -> 4547.172264099121
+recon_loss==> 13322476.9609375 || NL1==> 13307571.8125 || NL2==> 14905.216087341309 || NL3==> 0.0|| KLD==> 158157.6756591797
+Epoch -> 700 , loss -> 4544.3142166137695
+recon_loss==> 13311696.3125 || NL1==> 13301776.359375 || NL2==> 9920.00325012207 || NL3==> 0.0|| KLD==> 160424.00219726562
+Epoch -> 710 , loss -> 4541.7347412109375
+recon_loss==> 13306094.4765625 || NL1==> 13295922.2734375 || NL2==> 10172.114204406738 || NL3==> 0.0|| KLD==> 158357.96044921875
+Epoch -> 720 , loss -> 4609.5330810546875
+recon_loss==> 13503385.34375 || NL1==> 13293079.921875 || NL2==> 210305.3568687439 || NL3==> 0.0|| KLD==> 164244.5067138672
+Epoch -> 730 , loss -> 4618.954917907715
+recon_loss==> 13495684.5078125 || NL1==> 13336466.3515625 || NL2==> 159218.20635986328 || NL3==> 0.0|| KLD==> 198127.17041015625
+Epoch -> 740 , loss -> 4606.217224121094
+recon_loss==> 13477358.90625 || NL1==> 13312989.03125 || NL2==> 164369.86979675293 || NL3==> 0.0|| KLD==> 178688.0125732422
+Epoch -> 750 , loss -> 4557.7239990234375
+recon_loss==> 13333696.2734375 || NL1==> 13311695.4921875 || NL2==> 22000.8738861084 || NL3==> 0.0|| KLD==> 178196.01879882812
+Epoch -> 760 , loss -> 4552.948570251465
+recon_loss==> 13337686.1015625 || NL1==> 13298906.09375 || NL2==> 38780.04936218262 || NL3==> 0.0|| KLD==> 160152.7958984375
+Epoch -> 770 , loss -> 4552.18408203125
+recon_loss==> 13332407.671875 || NL1==> 13291644.984375 || NL2==> 40762.60919189453 || NL3==> 0.0|| KLD==> 163168.03100585938
+Epoch -> 780 , loss -> 4542.852584838867
+recon_loss==> 13300312.7890625 || NL1==> 13286990.84375 || NL2==> 13321.928092956543 || NL3==> 0.0|| KLD==> 167538.3497314453
+Epoch -> 790 , loss -> 4542.617530822754
+recon_loss==> 13297082.6796875 || NL1==> 13284165.546875 || NL2==> 12917.12202835083 || NL3==> 0.0|| KLD==> 170053.88256835938
+Epoch -> 800 , loss -> 4549.780471801758
+recon_loss==> 13315470.7421875 || NL1==> 13276784.328125 || NL2==> 38686.4454498291 || NL3==> 0.0|| KLD==> 171905.97705078125
+Epoch -> 810 , loss -> 4557.0097579956055
+recon_loss==> 13317036.7578125 || NL1==> 13300916.0078125 || NL2==> 16120.696090698242 || NL3==> 0.0|| KLD==> 192831.3514404297
+Epoch -> 820 , loss -> 4561.033226013184
+recon_loss==> 13335799.515625 || NL1==> 13293853.90625 || NL2==> 41945.55859375 || NL3==> 0.0|| KLD==> 186133.6248779297
+Epoch -> 830 , loss -> 4595.96199798584
+recon_loss==> 13405092.296875 || NL1==> 13349555.6484375 || NL2==> 55536.585372924805 || NL3==> 0.0|| KLD==> 220735.4580078125
+Epoch -> 840 , loss -> 4553.415977478027
+recon_loss==> 13312774.03125 || NL1==> 13300259.0390625 || NL2==> 12515.015312194824 || NL3==> 0.0|| KLD==> 186231.79321289062
+Epoch -> 850 , loss -> 4548.942832946777
+recon_loss==> 13320358.7890625 || NL1==> 13291264.0859375 || NL2==> 29094.642082214355 || NL3==> 0.0|| KLD==> 165809.10473632812
+Epoch -> 860 , loss -> 4547.996955871582
+recon_loss==> 13315205.03125 || NL1==> 13286862.4921875 || NL2==> 28342.583015441895 || NL3==> 0.0|| KLD==> 167992.22290039062
+Epoch -> 870 , loss -> 4552.717422485352
+recon_loss==> 13331372.1953125 || NL1==> 13286755.4140625 || NL2==> 44616.6923828125 || NL3==> 0.0|| KLD==> 165812.5615234375
+Epoch -> 880 , loss -> 4537.986946105957
+recon_loss==> 13277998.7890625 || NL1==> 13268974.09375 || NL2==> 9024.768768310547 || NL3==> 0.0|| KLD==> 175330.2930908203
+Epoch -> 890 , loss -> 4534.519821166992
+recon_loss==> 13275248.4375 || NL1==> 13266371.15625 || NL2==> 8877.276161193848 || NL3==> 0.0|| KLD==> 167787.05834960938
+Epoch -> 900 , loss -> 4534.0780029296875
+recon_loss==> 13273616.6015625 || NL1==> 13262691.28125 || NL2==> 10925.266929626465 || NL3==> 0.0|| KLD==> 168149.376953125
+Epoch -> 910 , loss -> 4533.974433898926
+recon_loss==> 13270316.453125 || NL1==> 13258852.8125 || NL2==> 11463.554168701172 || NL3==> 0.0|| KLD==> 171150.9708251953
+Epoch -> 920 , loss -> 4532.002868652344
+recon_loss==> 13268265.2421875 || NL1==> 13257453.234375 || NL2==> 10812.009170532227 || NL3==> 0.0|| KLD==> 167247.46740722656
+Epoch -> 930 , loss -> 4530.7325439453125
+recon_loss==> 13260873.8125 || NL1==> 13252925.0234375 || NL2==> 7948.901329040527 || NL3==> 0.0|| KLD==> 170998.3740234375
+Epoch -> 940 , loss -> 4533.468467712402
+recon_loss==> 13264093.1875 || NL1==> 13250730.671875 || NL2==> 13362.413959503174 || NL3==> 0.0|| KLD==> 174926.77880859375
+Epoch -> 950 , loss -> 4529.833267211914
+recon_loss==> 13259093.1796875 || NL1==> 13249968.453125 || NL2==> 9124.771873474121 || NL3==> 0.0|| KLD==> 170066.6650390625
+Epoch -> 960 , loss -> 5715.18310546875
+recon_loss==> 16695516.03125 || NL1==> 13542782.4296875 || NL2==> 3152733.63671875 || NL3==> 0.0|| KLD==> 266911.7360839844
+Epoch -> 970 , loss -> 5006.616012573242
+recon_loss==> 14626965.7734375 || NL1==> 13452536.671875 || NL2==> 1174429.1279296875 || NL3==> 0.0|| KLD==> 222045.21215820312
+Epoch -> 980 , loss -> 4988.012489318848
+recon_loss==> 14609337.40625 || NL1==> 13397121.6875 || NL2==> 1212215.7104492188 || NL3==> 0.0|| KLD==> 182998.205078125
+Epoch -> 990 , loss -> 4628.043563842773
+recon_loss==> 13549139.40625 || NL1==> 13383337.5 || NL2==> 165801.91961669922 || NL3==> 0.0|| KLD==> 172794.41235351562
+Colored topics: <g> extended keyword , <r> keyword, <b> bigram 
+
+
+------------------------------
+0: woman people star city family man death talk call three long question company second job house power award police office 
+1:  <b> president </b>   <b> state </b>  american america bill white gun change  <b> national </b>  anti support sander  <b> tax </b>  plan war country federal attack black gay 
+2:  <b> year </b>  time thing week  <b> day </b>  school best big  <b> season </b>  summer  <b> night </b>  moment gay reason film holiday sure making movie real 
+3:  <b> don </b>  twitter york facebook tweet wear click jimmy lgbt celebrate tumblr wasn nfl los thanksgiving halloween san flight email paris 
+4:  <b> trump </b>  obama court law  <b> health </b>  news policy justice  <b> official </b>  judge washington administration claim supreme doesn security deal immigration social clinton 
+5: life love kid child  <b> day </b>  people good food best mom parent find help work baby great girl check watch friend 
+6: photo video style black story doe fashion game doesn month didn men isn white won dress oscar dog beautiful lost 
+7:  <b> health </b>  study life heart sleep cancer problem risk live relationship change stress child healthy weight yoga care human living patient 
+8:  <b> donald </b>   <r> republican </r>   <g> gop </g>  clinton house  <g> hillary </g>   <r> election </r>   <b> democrat </b>   <b> party </b>   <b> candidate </b>   <b> presidential </b>   <b> senate </b>   <b> vote </b>   <b> campaign </b>   <b> voter </b>   <g> democratic </g>  care people time  <b> win </b>  
+9: study cancer risk disease  <b> health </b>  sleep patient researcher people heart life obesity brain hormone medicine treatment stress diabetes healthy dementia 
+------------------------------
+topics: 
+
+
+------------------------------
+0: woman people star city family man death talk call three long question company second job house power award police office
+1: president state american america bill white gun change national anti support sander tax plan war country federal attack black gay
+2: year time thing week day school best big season summer night moment gay reason film holiday sure making movie real
+3: don twitter york facebook tweet wear click jimmy lgbt celebrate tumblr wasn nfl los thanksgiving halloween san flight email paris
+4: trump obama court law health news policy justice official judge washington administration claim supreme doesn security deal immigration social clinton
+5: life love kid child day people good food best mom parent find help work baby great girl check watch friend
+6: photo video style black story doe fashion game doesn month didn men isn white won dress oscar dog beautiful lost
+7: health study life heart sleep cancer problem risk live relationship change stress child healthy weight yoga care human living patient
+8: donald republican gop clinton house hillary election democrat party candidate presidential senate vote campaign voter democratic care people time win
+9: study cancer risk disease health sleep patient researcher people heart life obesity brain hormone medicine treatment stress diabetes healthy dementia
+------------------------------
+KNN:-  [0.3858462258437483, 0.3511947365523317, 0.3401214006496724, 0.33470516985079557, 0.3312434619831526]
+AUCPR (DESM):-  0.05132125829871373
+AUCPR (tf-idf):-  0.02783485540133127
+
+
+Sum avg cosine for all topics (10 topwords): 
+
+ [0.19006874 0.31829786 0.13962457 0.15582529 0.29315418 0.14658922
+ 0.13135016 0.11884063 0.79927605 0.14681897]

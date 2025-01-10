@@ -42,7 +42,7 @@ parser.add_argument('-qs','--queryset', type=int, default=1, help='the queryset 
 
 ## model arguments
 parser.add_argument('-k','--num_topic', type=int, default=10, help='number of topics')
-parser.add_argument('-sg_emb','--skipgram_embeddings', type=int, default=0, help='whether use of skipgram embeddings or any other embeddings')
+parser.add_argument('-sg_emb','--skipgram_embeddings', type=int, default=1, help='whether use of skipgram embeddings or any other embeddings')
 parser.add_argument('-emb_sz','--emb_size', type=int, default=300, help='dimension of embeddings')
 parser.add_argument('-act','--activation', type=str, default='softplus', help='which activation function(relu,softplus,leaky_relu,sigmoid)')
 parser.add_argument('-h1','--hidden1', type=int, default=100, help='dim of hidden layer 1')
@@ -85,9 +85,12 @@ if __name__ == '__main__':
   if data_name == 'bbc': bs = 250
   elif data_name == 'searchsnippet': bs = 250
   elif data_name == 'yahooanswers': bs = 1000
+  # elif data_name == 'newscategory': bs = 2000
   elif data_name == 'nfcorpus': bs = 250
   elif data_name == 'opinions_twitter': bs = 250
+  elif data_name == 'newscategory': bs = 1000
   else: bs = args.batch_size
+  print('bs:', bs)
 
   # eps_samples = args.eps_samples
 
@@ -109,16 +112,16 @@ if __name__ == '__main__':
   save_dir_no_bkp = '/home/student_no_backup/sakumar/'+paper+'/'+model_name
   # save_dir_no_bkp = home_dir
   #### Data Downloading ####
-  device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+  # device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
   
   dtype=args.dtype 
 
   # ##### Data loading #####
   # perc_vocab = 0.7
-  loaded_data = load_data(data_name,dtype,data_dir,queryset,ext,skipgram_embeddings)
+  loaded_data = load_data(data_name,dtype,data_dir,queryset,skipgram_embeddings)
   data_preprocessed,data_preprocessed_labels,embeddings,name,keywords,extend_each_by,extended_keywords_list,queries_data_dict = loaded_data
-  print(name,len(data_preprocessed_labels),len(data_preprocessed),len(embeddings),dtype,' keyword(s) - ',keywords)
+  print(name,len(data_preprocessed_labels),len(data_preprocessed),len(embeddings),dtype,' keyword(s) - ',keywords,extended_keywords_list)
 
   num_keyword = len(keywords)
   len_docs = [len(d.split(" ")) for d in data_preprocessed]
@@ -155,7 +158,7 @@ if __name__ == '__main__':
   keywords_as_docs = np.zeros(shape=(len(keywords),len(word_list)),dtype=np.uint8)
   for i in range(len(keywords)):
     kws = extended_keywords_list[i]
-    print(kws)
+    print('###',kws)
     for w in kws:
       keywords_as_docs[i][word_list.index(w)] += 1
   # if data_name =='yahooanswers': keywords_as_docs = keywords_as_docs.reshape(int(len(keywords)/2), 2, len(word_list)).sum(axis=1).astype('int')
@@ -302,7 +305,7 @@ if __name__ == '__main__':
 
     sorted_unique_labels_relv = sorted(set(relv_labels))
 
-    figname = "GROUND_TRUTH_"+data_name+"_"+dtype+"_topics_"+str(args.num_topic)+"_run_"+str(args.run)+"_qs_"+str(queryset)+"_ext_"+str(ext)
+    figname = "GROUND_TRUTH_"+data_name+"_"+dtype+"_topics_"+str(args.num_topic)+"_run_"+str(args.run)+"_qs_"+str(queryset)#+"_ext_"+str(ext)
     plot_fig(model_name,X_original_seq[relv_docs_idx_ground_truth], relv_labels, zphi,lim,sorted_unique_labels_relv,query_center,keywords_as_labels,hv_qwords=True,showtopic=True,
     bold_topics=True,remove_legend=False,show_axis=True,save=True,figname=figname)
     _,_,aupr_ground_truth = cal_AUPR(len(keywords_as_labels),2,relv_docs_idx_ground_truth,X_original_seq,query_center)

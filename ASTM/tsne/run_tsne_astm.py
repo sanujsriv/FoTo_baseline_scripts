@@ -308,14 +308,13 @@ paper='emnlp2022'
 dataset_dir = '/home/grad16/sakumar/'+paper+'/dataset'
 ASTM_results_dir = '/home/student_no_backup/sakumar/'+paper+'/ASTM/root'
 data_dir = '/home/grad16/sakumar/'+paper+'/dataset/content'
-num_topics = ['10','20','30','40','50']
-
-
+# num_topics = ['50'] # ['10','20','30','40','50']
 
 parser = argparse.ArgumentParser(description='ASTM')
 parser.add_argument('--data_name', type=str, default='bbc', help='bbc,searchsnippet, wos')
 parser.add_argument('--num_runs', type=str, default='1', help='# run')
 parser.add_argument('--queryset', type=int, default=1, help='queryset used to run the model')
+parser.add_argument('--num_topics', type=int, default=10, help='number of topics')
 
 args = parser.parse_args()
 
@@ -323,24 +322,32 @@ data_name = args.data_name
 dtype = 'short'
 r = str(args.num_runs)
 qs = str(args.queryset)
+num_topics = [str(args.num_topics)]
 
 all_topics_theta = []
 all_topics_wordlist = []
 for num_topic in num_topics:
 
   print(data_name,num_topic,qs,r)
+
+  # embeddings = load_obj_pkl5("embeddings_"+data_name+"_short")
+  os.chdir('/home/grad16/sakumar/emnlp2022/dataset/')
+  embeddings = load_obj_pkl5("generated_embeddings_all_datasets")
+
   os.chdir(data_dir+'/data_'+data_name+"/short")
   dtype ='short'
-  embeddings = load_obj_pkl5("embeddings_"+data_name+"_short")
+  
   new_docs=load_obj_pkl5("data_preprocessed_"+data_name+"_"+dtype)
   data_preprocessed=load_obj_pkl5("data_preprocessed_"+data_name+"_"+dtype)
   new_labels=load_obj_pkl5("data_preprocessed_labels_"+data_name+"_"+dtype)
-  queries_data_dict = decompress_pickle("queries_"+data_name)
+  # queries_data_dict = decompress_pickle("queries_"+data_name)
+  queries_data_dict = load_obj_pkl5("queries_data_dict_sg")
+
   qs = str(qs)
   keywords = queries_data_dict[qs]['query']
   # whole_query = queries_data_dict[qs]['whole_query'] #@NEW
   extend_each_by = queries_data_dict[qs]['extend_each_by']
-  extended_keywords_list = queries_data_dict[qs]['extended_keywords_list']
+  extended_keywords_list = queries_data_dict[qs]['extended_keywords_list_sg_cosine']
 
   vectorizer = CountVectorizer(min_df=0,dtype=np.uint8)
   train_vec = vectorizer.fit_transform(new_docs).toarray()
@@ -433,7 +440,7 @@ for nt in range(len(num_topics)):
   train_label = labels[not_pseudo_idx]
   sorted_unique_labels = sorted(set(train_label))
   zphi = torch.zeros(int(num_topic),2)
-  lim=15
+  lim=50
   
   ############
   topk = 100
@@ -442,9 +449,9 @@ for nt in range(len(num_topics)):
   topk_tfidfdocs = X_original_seq[sorted_tfidf_idx[:topk]]
   topk_tfidflabels = train_label[sorted_tfidf_idx[:topk]]
 
-  figname = "TFIDF_"+data_name+"_"+dtype+"_topics_"+str(num_topic)+"_run_"+str(r)+"_qs_"+str(qs)
-  plot_fig(model_name,topk_tfidfdocs, topk_tfidflabels, zphi,lim,sorted_unique_labels,query_center,keywords_as_labels,hv_qwords=True,showtopic=True,
-  bold_topics=True,remove_legend=False,show_axis=True,save=True,figname=figname)
+  # figname = "TFIDF_"+data_name+"_"+dtype+"_topics_"+str(num_topic)+"_run_"+str(r)+"_qs_"+str(qs)
+  # plot_fig(model_name,topk_tfidfdocs, topk_tfidflabels, zphi,lim,sorted_unique_labels,query_center,keywords_as_labels,hv_qwords=True,showtopic=True,
+  # bold_topics=True,remove_legend=False,show_axis=True,save=True,figname=figname)
   ### /top K Tf-IDf ####
 
 
@@ -452,9 +459,9 @@ for nt in range(len(num_topics)):
   topk_DESMdocs = X_original_seq[sorted_desm_idx[:topk]]
   topk_DESMlabels = train_label[sorted_desm_idx[:topk]]
 
-  figname = "DESM_"+data_name+"_"+dtype+"_topics_"+str(num_topic)+"_run_"+str(r)+"_qs_"+str(qs)
-  plot_fig(model_name,topk_DESMdocs, topk_DESMlabels, zphi,lim,sorted_unique_labels,query_center,keywords_as_labels,hv_qwords=True,showtopic=True,
-  bold_topics=True,remove_legend=False,show_axis=True,save=True,figname=figname)
+  # figname = "DESM_"+data_name+"_"+dtype+"_topics_"+str(num_topic)+"_run_"+str(r)+"_qs_"+str(qs)
+  # plot_fig(model_name,topk_DESMdocs, topk_DESMlabels, zphi,lim,sorted_unique_labels,query_center,keywords_as_labels,hv_qwords=True,showtopic=True,
+  # bold_topics=True,remove_legend=False,show_axis=True,save=True,figname=figname)
   ### /top K DESM ####
 
 
@@ -466,9 +473,9 @@ for nt in range(len(num_topics)):
 
     sorted_unique_labels_relv = sorted(set(relv_labels))
 
-    figname = "GROUND_TRUTH_"+data_name+"_"+dtype+"_topics_"+str(num_topic)+"_run_"+str(r)+"_qs_"+str(qs)
-    plot_fig(model_name,X_original_seq[relv_docs_idx_ground_truth], relv_labels, zphi,lim,sorted_unique_labels_relv,query_center,keywords_as_labels,hv_qwords=True,showtopic=True,
-    bold_topics=True,remove_legend=False,show_axis=True,save=True,figname=figname)
+    # figname = "GROUND_TRUTH_"+data_name+"_"+dtype+"_topics_"+str(num_topic)+"_run_"+str(r)+"_qs_"+str(qs)
+    # plot_fig(model_name,X_original_seq[relv_docs_idx_ground_truth], relv_labels, zphi,lim,sorted_unique_labels_relv,query_center,keywords_as_labels,hv_qwords=True,showtopic=True,
+    # bold_topics=True,remove_legend=False,show_axis=True,save=True,figname=figname)
     _,_,aupr_ground_truth = cal_AUPR(len(keywords_as_labels),2,relv_docs_idx_ground_truth,X_original_seq,query_center)
 
     print('AUCPR (ground_truth):- ',aupr_ground_truth)

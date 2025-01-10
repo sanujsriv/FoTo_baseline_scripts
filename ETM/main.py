@@ -128,9 +128,12 @@ elif 'nfcorpus' in data_name:
 elif 'opinions_twitter' in data_name: 
   batch_size = 250
   eval_batch_size = 250
+elif 'newscategory' in data_name: 
+  batch_size = 1000
+  eval_batch_size = 1000
 else: 
-  batch_size = 250
-  eval_batch_size = 250
+  batch_size = 1000
+  eval_batch_size = 1000
 
 queryset = args.queryset
 
@@ -157,10 +160,13 @@ os.chdir(data_dir+d_dir)
 data_preprocessed=load_obj_pkl5("data_preprocessed_"+data_name+"_"+dtype)
 data_preprocessed_labels=load_obj_pkl5("data_preprocessed_labels_"+data_name+"_"+dtype)
 embeddings = load_obj_pkl5("embeddings_"+data_name+"_"+dtype)
-queries_data_dict = decompress_pickle("queries_"+data_name)
+# queries_data_dict = decompress_pickle("queries_"+data_name)
+queries_data_dict = load_obj_pkl5("queries_data_dict_sg")
+
 qs = str(queryset)
 keywords = queries_data_dict[qs]['query']
-extended_keywords_list = queries_data_dict[qs]['extended_keywords_list']
+# extended_keywords_list = queries_data_dict[qs]['extended_keywords_list']
+extended_keywords_list = queries_data_dict[qs]['extended_keywords_list_sg_cosine']
 
 train_vec,train_label,_,preprossed_data_non_zeros,vocab_data = get_data_label_vocab(data_preprocessed,data_preprocessed_labels)
 train_label  =np.asanyarray(train_label)
@@ -529,8 +535,8 @@ if args.mode == 'train':
 
     figname = data_name+"_"+dtype+"_topics_"+str(args.num_topic)+"_run_"+str(args.run)+"_qs_"+str(queryset)
     lim=20
-    plot_fig(model_name,X, labels_list, zphi,lim,sorted_unique_labels,query_center,keywords_as_labels,hv_qwords=True,showtopic=True,
-    bold_topics=True,remove_legend=False,show_axis=True,save=True,figname=figname)
+    # plot_fig(model_name,X, labels_list, zphi,lim,sorted_unique_labels,query_center,keywords_as_labels,hv_qwords=True,showtopic=True,
+    # bold_topics=True,remove_legend=False,show_axis=True,save=True,figname=figname)
 
     #*********** Quantitative ***********#
     # if show_knn:
@@ -547,9 +553,9 @@ if args.mode == 'train':
     topk_tfidfdocs = X_original_seq[sorted_tfidf_idx[:topk]]
     topk_tfidflabels = train_label[sorted_tfidf_idx[:topk]]
 
-    figname = "TFIDF_"+data_name+"_"+dtype+"_topics_"+str(args.num_topic)+"_run_"+str(args.run)+"_qs_"+str(queryset)
-    plot_fig(model_name,topk_tfidfdocs, topk_tfidflabels, zphi,lim,sorted_unique_labels,query_center,keywords_as_labels,hv_qwords=True,showtopic=True,
-    bold_topics=True,remove_legend=False,show_axis=True,save=True,figname=figname)
+    # figname = "TFIDF_"+data_name+"_"+dtype+"_topics_"+str(args.num_topic)+"_run_"+str(args.run)+"_qs_"+str(queryset)
+    # plot_fig(model_name,topk_tfidfdocs, topk_tfidflabels, zphi,lim,sorted_unique_labels,query_center,keywords_as_labels,hv_qwords=True,showtopic=True,
+    # bold_topics=True,remove_legend=False,show_axis=True,save=True,figname=figname)
     ### /top K Tf-IDf ####
 
 
@@ -557,9 +563,9 @@ if args.mode == 'train':
     topk_DESMdocs = X_original_seq[sorted_desm_idx[:topk]]
     topk_DESMlabels = train_label[sorted_desm_idx[:topk]]
 
-    figname = "DESM_"+data_name+"_"+dtype+"_topics_"+str(args.num_topic)+"_run_"+str(args.run)+"_qs_"+str(queryset)
-    plot_fig(model_name,topk_DESMdocs, topk_DESMlabels, zphi,lim,sorted_unique_labels,query_center,keywords_as_labels,hv_qwords=True,showtopic=True,
-    bold_topics=True,remove_legend=False,show_axis=True,save=True,figname=figname)
+    # figname = "DESM_"+data_name+"_"+dtype+"_topics_"+str(args.num_topic)+"_run_"+str(args.run)+"_qs_"+str(queryset)
+    # plot_fig(model_name,topk_DESMdocs, topk_DESMlabels, zphi,lim,sorted_unique_labels,query_center,keywords_as_labels,hv_qwords=True,showtopic=True,
+    # bold_topics=True,remove_legend=False,show_axis=True,save=True,figname=figname)
     ### /top K DESM ####
 
     if data_name == 'nfcorpus' or data_name=='opinions_twitter':
@@ -570,9 +576,9 @@ if args.mode == 'train':
 
       sorted_unique_labels_relv = sorted(set(relv_labels))
 
-      figname = "GROUND_TRUTH_"+data_name+"_"+dtype+"_topics_"+str(args.num_topic)+"_run_"+str(args.run)+"_qs_"+str(queryset)
-      plot_fig(model_name,X_original_seq[relv_docs_idx_ground_truth], relv_labels, zphi,lim,sorted_unique_labels_relv,query_center,keywords_as_labels,hv_qwords=True,showtopic=True,
-      bold_topics=True,remove_legend=False,show_axis=True,save=True,figname=figname)
+      # figname = "GROUND_TRUTH_"+data_name+"_"+dtype+"_topics_"+str(args.num_topic)+"_run_"+str(args.run)+"_qs_"+str(queryset)
+      # plot_fig(model_name,X_original_seq[relv_docs_idx_ground_truth], relv_labels, zphi,lim,sorted_unique_labels_relv,query_center,keywords_as_labels,hv_qwords=True,showtopic=True,
+      # bold_topics=True,remove_legend=False,show_axis=True,save=True,figname=figname)
       _,_,aupr_ground_truth = cal_AUPR(len(keywords_as_labels),2,relv_docs_idx_ground_truth,X_original_seq,query_center)
 
       print('AUCPR (ground_truth):- ',aupr_ground_truth)

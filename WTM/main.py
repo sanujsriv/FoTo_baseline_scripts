@@ -35,14 +35,14 @@ parser = argparse.ArgumentParser(description='Word Embeddings Topic Model (WTM)'
 parser.add_argument('-d','--dataset', type=str, default='bbc', help='name of corpus')
 parser.add_argument('-dt','--dtype', type=str, default='short', help='for short text')
 parser.add_argument('-path','--data_path', type=str, default='./content', help='directory containing data')
-parser.add_argument('-bs','--batch_size', type=int, default=256, help='batch size for training')
+parser.add_argument('-bs','--batch_size', type=int, default=250, help='batch size for training')
 parser.add_argument('-r','--run', type=int, default=1, help='run')
 parser.add_argument('-maxFeat','--max_features', type=int, default=4000, help='max features in countvectorizer (how large should be the vocab)')
 parser.add_argument('-qs','--queryset', type=int, default=1, help='the queryset to pass')
 
 ## model arguments
 parser.add_argument('-k','--num_topic', type=int, default=10, help='number of topics')
-parser.add_argument('-sg_emb','--skipgram_embeddings', type=int, default=0, help='whether use of skipgram embeddings or any other embeddings')
+parser.add_argument('-sg_emb','--skipgram_embeddings', type=int, default=1, help='whether use of skipgram embeddings or any other embeddings')
 parser.add_argument('-emb_sz','--emb_size', type=int, default=300, help='dimension of embeddings')
 parser.add_argument('-act','--activation', type=str, default='softplus', help='which activation function(relu,softplus,leaky_relu,sigmoid)')
 parser.add_argument('-h1','--hidden1', type=int, default=100, help='dim of hidden layer 1')
@@ -62,8 +62,9 @@ parser.add_argument('--show_knn', type=bool, default=False, help='Show KNN score
 
 args = parser.parse_args()
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+# device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
+device = "cuda"
 if __name__ == '__main__':
 
   torch.cuda.empty_cache()
@@ -80,14 +81,21 @@ if __name__ == '__main__':
   num_topic = args.num_topic
 
   skipgram_embeddings = args.skipgram_embeddings
+  
+  if skipgram_embeddings ==1:
+    print('using skipgram')
+  elif skipgram_embeddings == 0:
+    print('using google')
+    
   data_name= args.dataset # wos,bbc,searchsnippet,stackoverflow,agnews120k
   
-  if data_name == 'bbc': bs = 250 # 256 doesn't work with BatchNorm1d (last batch has only 1 doc so we cannot do batchnorm)
-  elif data_name == 'searchsnippet': bs = 250
-  elif data_name == 'yahooanswers': bs = 1000
-  elif data_name == 'nfcorpus': bs = 250
-  elif data_name == 'opinions_twitter': bs = 250
-  else: bs = args.batch_size
+  # if data_name == 'bbc': bs = 250 # 256 doesn't work with BatchNorm1d (last batch has only 1 doc so we cannot do batchnorm)
+  # elif data_name == 'searchsnippet': bs = 250
+  # elif data_name == 'yahooanswers': bs = 1000
+  # # elif data_name == 'newscategory': bs = 2000
+  # elif data_name == 'nfcorpus': bs = 250
+  # elif data_name == 'opinions_twitter': bs = 250
+  # else: bs = args.batch_size
 
   # eps_samples = args.eps_samples
 
@@ -98,7 +106,6 @@ if __name__ == '__main__':
   learning_rate = args.learning_rate
 
   queryset = args.queryset
-  ext=1
   paper = "emnlp2022"
   model_name = 'WTM'
   home_dir = '/home/grad16/sakumar/'+paper+'/'+model_name
@@ -106,12 +113,13 @@ if __name__ == '__main__':
   save_dir_no_bkp = '/home/student_no_backup/sakumar/'+paper+'/'+model_name
   # save_dir_no_bkp = home_dir
   #### Data Downloading ####
-  device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+  # device = torch.device("cuda:1" if torch.cuda.is_available() else "cpu")
   dtype=args.dtype 
 
   # ##### Data loading #####
   # perc_vocab = 0.7
-  loaded_data = load_data(data_name,dtype,data_dir,queryset,ext,skipgram_embeddings)
+  
+  loaded_data = load_data(data_name,dtype,data_dir,queryset,skipgram_embeddings)
   data_preprocessed,data_preprocessed_labels,embeddings,name,keywords,extend_each_by,extended_keywords_list,queries_data_dict = loaded_data
   print(name,len(data_preprocessed_labels),len(data_preprocessed),len(embeddings),dtype,' keyword(s) - ',keywords)
 
@@ -146,6 +154,7 @@ if __name__ == '__main__':
   sorted_id_word_vocab = sorted(id_vocab.items(), key=lambda x: x[1]) ### alphabetically sorted
   word_list = [s[1] for s in sorted_id_word_vocab]
   
+  print(extended_keywords_list)
   keywords_as_docs = np.zeros(shape=(len(keywords),len(word_list)),dtype=np.uint8)
   for i in range(len(keywords)):
     kws = extended_keywords_list[i]
@@ -286,7 +295,7 @@ if __name__ == '__main__':
 
     sorted_unique_labels_relv = sorted(set(relv_labels))
 
-    figname = "GROUND_TRUTH_"+data_name+"_"+dtype+"_topics_"+str(args.num_topic)+"_run_"+str(args.run)+"_qs_"+str(queryset)+"_ext_"+str(ext)
+    figname = "GROUND_TRUTH_"+data_name+"_"+dtype+"_topics_"+str(args.num_topic)+"_run_"+str(args.run)+"_qs_"+str(queryset)#+"_ext_"+str(ext)
     plot_fig(model_name,X_original_seq[relv_docs_idx_ground_truth], relv_labels, zphi,lim,sorted_unique_labels_relv,query_center,keywords_as_labels,hv_qwords=True,showtopic=True,
     bold_topics=True,remove_legend=False,show_axis=True,save=True,figname=figname)
     _,_,aupr_ground_truth = cal_AUPR(len(keywords_as_labels),2,relv_docs_idx_ground_truth,X_original_seq,query_center)
@@ -344,6 +353,7 @@ if __name__ == '__main__':
   all_results['KNN'] = knn
   all_results['aupr_DESM'] = aupr_DESM
   all_results['aupr_tfidf'] = aupr_tfidf
+
   if data_name == 'nfcorpus' or data_name=='opinions_twitter':
     all_results['aupr_ground_truth'] = aupr_ground_truth
   all_results['sum_avg_cos'] = sum_avg_cos

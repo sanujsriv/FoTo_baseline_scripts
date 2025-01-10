@@ -31,6 +31,8 @@ for r in num_runs:
   save_dir = save_dir_no_bkp+"/SavedOutput/"+data_name+"/"+dtype+"/topics_"+str(num_topic)+"/qs_"+str(queryset)+"/run_"+str(r)
   os.makedirs(save_dir,exist_ok=True)
 
+# python3 main.py --dataset newscategory --num_topic 50 --run 4 -e 1000 -qs 2
+
   os.system("nohup python3 main.py \
    --dataset "+data_name+" --dtype "+dtype+" --num_topic "+num_topic+" --run "+str(r)+" -e "+epochs+" -qs "+str(queryset)+" > " \
    +save_dir+"/"+"output_"+data_name+"_"+str(num_topic)+".txt")

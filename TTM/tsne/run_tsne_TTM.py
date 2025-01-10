@@ -361,20 +361,25 @@ def theta_given_wordTopic_assignment(num_topic_ttm,TTM_alpha,pZ_doc):
     theta = np.insert(theta,0,0)
   return theta
 
+# embeddings = load_obj_pkl5("embeddings_"+data_name+"_short")
+os.chdir('/home/grad16/sakumar/'+paper+'/dataset/')
+embeddings=load_obj_pkl5("generated_embeddings_all_datasets")
+
 os.chdir(data_dir+'/data_'+data_name+"/short")
 dtype ='short'
-embeddings = load_obj_pkl5("embeddings_"+data_name+"_short")
 
 new_docs=load_obj_pkl5("data_preprocessed_"+data_name+"_"+dtype)
 data_preprocessed = load_obj_pkl5("data_preprocessed_"+data_name+"_"+dtype)
 
 new_labels=load_obj_pkl5("data_preprocessed_labels_"+data_name+"_"+dtype)
-queries_data_dict = decompress_pickle("queries_"+data_name)
+# queries_data_dict = decompress_pickle("queries_"+data_name)
+queries_data_dict = load_obj_pkl5("queries_data_dict_sg")
 qs = str(qs)
 keywords = queries_data_dict[qs]['query']
 # whole_query = queries_data_dict[qs]['whole_query'] #@NEW
 extend_each_by = queries_data_dict[qs]['extend_each_by']
-extended_keywords_list = queries_data_dict[qs]['extended_keywords_list']
+# extended_keywords_list = queries_data_dict[qs]['extended_keywords_list']
+extended_keywords_list = queries_data_dict[qs]['extended_keywords_list_sg_cosine']
 
 vectorizer = CountVectorizer(min_df=0,dtype=np.uint8)
 train_vec = vectorizer.fit_transform(new_docs).toarray()
@@ -403,6 +408,7 @@ os.chdir(data_dir+TTM_data_dir)
 TTM_data_dict = decompress_pickle('TTM_data_dict_'+data_name+'_short')             
 
 TTM_output_results = {}
+p='1'
 TTM_results_dir = '/home/student_no_backup/sakumar/'+paper+'/'+model_name+'/root/p_'+str(p)+'_q_1'
 save_dir_no_bkp = '/SavedOutput/'+data_name+"/short/topics_"+str(num_topic)+"/qs_"+str(qs)+"/run_"+str(run)
 os.chdir(TTM_results_dir+save_dir_no_bkp)
@@ -504,11 +510,11 @@ X_original_seq = X[not_pseudo_idx]
 train_label = labels[not_pseudo_idx]
 sorted_unique_labels = sorted(set(train_label))
 zphi = torch.zeros(int(num_topic),2)
-lim=15
+lim=50
 
-figname = "FULL_"+data_name+"_"+dtype+"_topics_"+str(num_topic)+"_run_"+str(run)+"_qs_"+str(qs)
-plot_fig(model_name,X_original_seq, train_label, zphi,lim,sorted_unique_labels,query_center,keywords_as_labels,hv_qwords=True,showtopic=True,
-bold_topics=True,remove_legend=False,show_axis=True,save=True,figname=figname)
+# figname = "FULL_"+data_name+"_"+dtype+"_topics_"+str(num_topic)+"_run_"+str(run)+"_qs_"+str(qs)
+# plot_fig(model_name,X_original_seq, train_label, zphi,lim,sorted_unique_labels,query_center,keywords_as_labels,hv_qwords=True,showtopic=True,
+# bold_topics=True,remove_legend=False,show_axis=True,save=True,figname=figname)
 
 ############
 topk = 100
@@ -517,9 +523,9 @@ topk = 100
 topk_tfidfdocs = X_original_seq[sorted_tfidf_idx[:topk]]
 topk_tfidflabels = train_label[sorted_tfidf_idx[:topk]]
 
-figname = "TFIDF_"+data_name+"_"+dtype+"_topics_"+str(num_topic)+"_run_"+str(run)+"_qs_"+str(qs)
-plot_fig(model_name,topk_tfidfdocs, topk_tfidflabels, zphi,lim,sorted_unique_labels,query_center,keywords_as_labels,hv_qwords=True,showtopic=True,
-bold_topics=True,remove_legend=False,show_axis=True,save=True,figname=figname)
+# figname = "TFIDF_"+data_name+"_"+dtype+"_topics_"+str(num_topic)+"_run_"+str(run)+"_qs_"+str(qs)
+# plot_fig(model_name,topk_tfidfdocs, topk_tfidflabels, zphi,lim,sorted_unique_labels,query_center,keywords_as_labels,hv_qwords=True,showtopic=True,
+# bold_topics=True,remove_legend=False,show_axis=True,save=True,figname=figname)
 ### /top K Tf-IDf ####
 
 
@@ -527,9 +533,9 @@ bold_topics=True,remove_legend=False,show_axis=True,save=True,figname=figname)
 topk_DESMdocs = X_original_seq[sorted_desm_idx[:topk]]
 topk_DESMlabels = train_label[sorted_desm_idx[:topk]]
 
-figname = "DESM_"+data_name+"_"+dtype+"_topics_"+str(num_topic)+"_run_"+str(run)+"_qs_"+str(qs)
-plot_fig(model_name,topk_DESMdocs, topk_DESMlabels, zphi,lim,sorted_unique_labels,query_center,keywords_as_labels,hv_qwords=True,showtopic=True,
-bold_topics=True,remove_legend=False,show_axis=True,save=True,figname=figname)
+# figname = "DESM_"+data_name+"_"+dtype+"_topics_"+str(num_topic)+"_run_"+str(run)+"_qs_"+str(qs)
+# plot_fig(model_name,topk_DESMdocs, topk_DESMlabels, zphi,lim,sorted_unique_labels,query_center,keywords_as_labels,hv_qwords=True,showtopic=True,
+# bold_topics=True,remove_legend=False,show_axis=True,save=True,figname=figname)
 ### /top K DESM ####
 
 # AUPR
@@ -542,9 +548,10 @@ if data_name == 'nfcorpus' or data_name=='opinions_twitter':
 
   sorted_unique_labels_relv = sorted(set(relv_labels))
 
-  figname = "GROUND_TRUTH_"+data_name+"_"+dtype+"_topics_"+str(num_topic)+"_run_"+str(run)+"_qs_"+str(qs)
-  plot_fig(model_name,X_original_seq[relv_docs_idx_ground_truth], relv_labels, zphi,lim,sorted_unique_labels_relv,query_center,keywords_as_labels,hv_qwords=True,showtopic=True,
-  bold_topics=True,remove_legend=False,show_axis=True,save=True,figname=figname)
+  # figname = "GROUND_TRUTH_"+data_name+"_"+dtype+"_topics_"+str(num_topic)+"_run_"+str(run)+"_qs_"+str(qs)
+  # plot_fig(model_name,X_original_seq[relv_docs_idx_ground_truth], relv_labels, zphi,lim,sorted_unique_labels_relv,query_center,keywords_as_labels,hv_qwords=True,showtopic=True,
+  # bold_topics=True,remove_legend=False,show_axis=True,save=True,figname=figname)
+  
   _,_,aupr_ground_truth = cal_AUPR(len(keywords_as_labels),2,relv_docs_idx_ground_truth,X_original_seq,query_center)
 
   print('AUCPR (ground_truth):- ',aupr_ground_truth)
@@ -555,11 +562,7 @@ print('AUCPR (DESM):- ',aupr_DESM)
 
 relv_docs_idx_tfidf = sorted_tfidf_idx[:topk]
 _,_,aupr_tfidf = cal_AUPR(len(keywords_as_labels),2,relv_docs_idx_tfidf,X_original_seq,query_center)
-
 print('AUCPR (tf-idf):- ',aupr_tfidf)
-
-
-
 
 os.chdir(TTM_results_dir+save_dir_no_bkp)
 all_results = {}
@@ -574,7 +577,6 @@ all_results['keywords_as_labels'] = keywords_as_labels
 all_results['topics'] = TTM_output_results['topics']
 filtered_topics = list(filter(None,TTM_output_results['topics']))
 topics_wordlist = [t.split(' ') for t in filtered_topics]
-
 all_results['sum_avg_cos'] = get_cosine_sum_topics(topics_wordlist,embeddings,keywords)
 all_results['colored_topics'] = get_colored_topics(topics_wordlist,keywords,bigram_coocurring_word_list,extended_keywords_list)
 all_results['KNN'] = cal_knn(X,labels)
@@ -586,7 +588,6 @@ if data_name == 'nfcorpus' or data_name=='opinions_twitter':
 
 all_results['runtime'] = runtime
 all_results['num_topic_ttm'] = len(filtered_topics)
-
 
 print(os.getcwd())
 compressed_pickle(all_results,"TTM_metrics_"+data_name+"_"+"numtopic_"+num_topic+"_run_"+str(run)+"_qs_"+qs)  
